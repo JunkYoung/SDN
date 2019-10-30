@@ -5,7 +5,7 @@ import time
 from Crypto.PublicKey import RSA
 from Crypto import Random
 
-from deployer import *
+#from deployer import *
 
 
 IP = '10.0.2.15'

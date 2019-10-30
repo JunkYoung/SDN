@@ -11,8 +11,8 @@ from Crypto import Random
 from deployer import *
 
 
-CONTROLLER_IP = '10.0.2.15'
-PORT = 5000
+ip = '10.0.2.15'
+port = 5000
 baseUrl = 'http://localhost:8181/restconf'
 odl_username = 'admin'
 odl_password = 'admin'
@@ -100,7 +100,7 @@ if __name__ == '__main__':
     egresses, switchs = read_hosts_switchs()
     print(egresses)
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock.bind((CONTROLLER_IP, PORT))
+    sock.bind((ip, port))
     key = generate_key()
     flow_id = 0
     for egress in egresses:
