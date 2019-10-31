@@ -4,50 +4,38 @@ import time
 from Crypto.PublicKey import RSA
 from Crypto import Random
 
-
-SERVER_IP = '172.26.17.82'
-SERVER_PORT = 5000
-
-KEY_LENGTH = 1024
-CHUNKSIZE = 128
-base_path = 'temp/'
+from config import *
 
 
 def get_ip_name():
     f = os.popen('ifconfig eth0 | grep "inet\ addr" | cut -d: -f2 | cut -d" " -f1')
-    IP = f.read()
-    rules_file = base_path + 'host_' + IP + '.rules'
+    ip = f.read()
+    rules_file = Config.BASE_PATH + 'host_' + ip + '.rules'
 
-    return IP, rules_file
+    return ip, rules_file
 
 
 def save_iptables(rules_file):
     os.system('iptables-save > ' + rules_file)
 
 
-def get_sock():
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.connect((SERVER_IP, SERVER_PORT))
-
-    return sock
-
-
 def receive_key(sock):
-    sock = get_sock()
-    pub_key = sock.recv(KEY_LENGTH).decode()
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.connect((Config.SERVER_IP, Config.SERVER_PORT))
+    pub_key = sock.recv(Config.KEY_LENGTH).decode()
     sock.send(b'END')
-    key = RSA.importKey(pub_key)
     sock.close()
+    key = RSA.importKey(pub_key)
 
     return key
 
 
-def enc_file(rules_flie, key):
+def enc_file(rules_file, key):
     enc_file = rules_file + '.enc'
     with open(rules_file, 'r') as f, open(enc_file, 'wb') as enc_f:
         while True:
             time.sleep(0.01)
-            data = f.read(CHUNKSIZE)
+            data = f.read(Config.CHUNK_SIZE)
             if data == '':
                 break
             encrypted = key.encrypt(data.encode(), 32)
@@ -56,7 +44,7 @@ def enc_file(rules_flie, key):
     return enc_file
 
 
-if __name__ == '__main__':
+def make_enc_file():
     print("=====getting host info=====")
     host_ip, rules_file = get_ip_name()
     print(host_ip)
@@ -70,3 +58,8 @@ if __name__ == '__main__':
     enc_file = enc_file(rules_file, key)
     print(enc_file)
     print("=====end program=====")
+
+
+if __name__ == '__main__':
+    make_enc_file()
+    

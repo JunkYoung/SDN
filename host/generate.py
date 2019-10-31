@@ -43,9 +43,14 @@ def apply_rules(rules):
             print("failed apply rule: " + rule)
 
 
-if __name__=='__main__':
+def test():
     print("=====generating rules=====")    
     rules = generate_rules(int(sys.argv[1]))
     print("=====applying rules=====")
     apply_rules(rules)
     print("=====end program=====")
+
+
+if __name__=='__main__':
+    test()
+    

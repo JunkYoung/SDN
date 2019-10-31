@@ -3,42 +3,34 @@ import paramiko
 from Crypto.PublicKey import RSA
 from Crypto import Random
 
+from config import *
 
-IP = '172.26.17.82'
-PORT = 5000
 
-host_ips = ['172.26.17.131', '172.26.17.125']
-username = 'pi'
-password = '2229'
 commands = []
 #commands.append('SDN/host/sudo python3 generate.py 10')
 commands.append('SDN/host/sudo python3 encrypt.py')
 
-KEY_LENGTH = 1024
-base_path = 'temp'
-
 
 def generate_key():
     random_generator = Random.new().read
-    keypair = RSA.generate(KEY_LENGTH, random_generator)
-    
-    return keypair
-
-
-def save_key(keypair):
-    with open (base_path + 'private.pem', 'wb') as f:
+    keypair = RSA.generate(Config.KEY_LENGTH, random_generator)
+    with open (Config.BASE_PATH + 'private.pem', 'wb') as f:
         f.write(keypair.privatekey().exportKey())
-    with open (base_path + 'public.pem', 'wb') as f:
+    with open (Config.BASE_PATH + 'public.pem', 'wb') as f:
         f.write(keypair.publickey().exportKey())
+    pub_key = keypair.publickey.exportKey()
+
+    return pub_key
 
 
-def run_hosts(sock, keypair):
-    pub_key = keypair.publickey().exportKey()
+#run hosts using ssh, and do function fun with args using sock with that host
+def run_hosts(fun, *args):
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    for host_ip in host_ips:
-        print("=====key sending to " + host_ip + "=====")
-        ssh.connect(host_ip, username=username, password=password)
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.bind((Config.IP, Config.PORT))
+    for ip in Config.HOST_IPS:
+        ssh.connect(ip, username=Config.USERNAME, password=Config.PASSWORD)
         for command in commands:
             stdin, stdout, stderr = ssh.exec_command(command)
             lines = stdout.readlines()
@@ -47,8 +39,9 @@ def run_hosts(sock, keypair):
             lines = stderr.readlines()
             for line in lines:
                 print(line)
-        send_key(sock, pub_key)
+        fun(sock, *args)
         ssh.close()
+    sock.close()
 
 
 def send_key(sock, pub_key):
@@ -62,15 +55,12 @@ def send_key(sock, pub_key):
     conn.close()
 
 
-def get_sock():
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.bind((IP, PORT))
+def send_enc_msg():
+    print("=====generating key=====")
+    pub_key = generate_key()
+    print("=====sending key=====")
+    run_hosts(send_key, pub_key)
 
 
 if __name__ == '__main__':
-    #keypair = generate_key()
-    #save_key(keypair)
-    #sock = get_sock()
-    #run_hosts(sock, keypair)
-    #sock.close()
-    print("=====sending key to node=====\n10.0.0.5\n10.0.0.11\n=====finished=====")
+    send_enc_msg()

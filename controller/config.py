@@ -1,0 +1,13 @@
+class Config:
+    IP = '172.26.17.82'
+    PORT = 5000
+
+    HOST_IPS = ['172.26.17.131', '172.26.17.125']
+    USERNAME = 'pi'
+    PASSWORD = '2229'
+
+    KEY_LENGTH = 1024
+    CHUNK_SIZE = 128
+    BASE_PATH = 'temp/'
+
+    SWITCHS = ['00:02:14:02:ec:58:94:40', '00:02:14:02:ec:58:28:40']
