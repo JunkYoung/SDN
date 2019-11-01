@@ -11,6 +11,7 @@ from encrypt import *
 def send_file(enc_file):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.connect((Config.SERVER_IP, Config.SERVER_PORT))
+    print("connected")
     with open(enc_file, 'rb') as f:
         while True:
             time.sleep(0.01)

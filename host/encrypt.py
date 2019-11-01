@@ -9,7 +9,7 @@ from config import *
 
 def get_ip_name():
     f = os.popen('ifconfig eth0 | grep "inet\ addr" | cut -d: -f2 | cut -d" " -f1')
-    ip = f.read()
+    ip = f.read().strip()
     rules_file = Config.BASE_PATH + 'host_' + ip + '.rules'
 
     return ip, rules_file
@@ -19,7 +19,7 @@ def save_iptables(rules_file):
     os.system('iptables-save > ' + rules_file)
 
 
-def receive_key(sock):
+def receive_key():
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.connect((Config.SERVER_IP, Config.SERVER_PORT))
     pub_key = sock.recv(Config.KEY_LENGTH).decode()
@@ -30,7 +30,7 @@ def receive_key(sock):
     return key
 
 
-def enc_file(rules_file, key):
+def encrypt(rules_file, key):
     enc_file = rules_file + '.enc'
     with open(rules_file, 'r') as f, open(enc_file, 'wb') as enc_f:
         while True:
@@ -55,7 +55,7 @@ def make_enc_file():
     key = receive_key()
     print("=====received key=====")
     print("=====encrypting rules file=====")
-    enc_file = enc_file(rules_file, key)
+    enc_file = encrypt(rules_file, key)
     print(enc_file)
     print("=====end program=====")
 

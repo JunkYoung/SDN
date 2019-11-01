@@ -9,10 +9,10 @@ from encrypt import *
 
 COMMANDS = []
 #commands.append('SDN/host/sudo python3 generator.py 10')
-COMMANDS.append('SDN/host/sudo python3 send.py')
+COMMANDS.append('cd SDN/host/ && sudo python3 send.py')
 
 
-def load_key(keypair):
+def load_key():
     with open (Config.BASE_PATH + 'private.pem', 'rb') as f:
         priv_key = RSA.importKey(f.read())
     
@@ -20,17 +20,18 @@ def load_key(keypair):
 
 
 def recv_file(sock):
-    sock.listen(1)
-    conn, addr = sock.accept()
-    enc_file = Config.BASE_PATH + "controller" + sock.getpeername() + ".rules.enc"
-    with open(enc_file, 'wb') as f:
-        while True:
-            data = sock.recv(512)
-            if data == b'END':
-                break
-            else:
-                f.write(data)
-    conn.close()
+    while True:
+        sock.listen(1)
+        conn, addr = sock.accept()
+        enc_file = Config.BASE_PATH + "controller" + conn.getpeername()[0] + ".rules.enc"
+        with open(enc_file, 'wb') as f:
+            while True:
+                data = conn.recv(512)
+                if data == b'END':
+                    break
+                else:
+                    f.write(data)
+        conn.close()
 
 
 def dec_files(priv_key):
