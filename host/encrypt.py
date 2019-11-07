@@ -23,6 +23,7 @@ def receive_key():
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.connect((Config.SERVER_IP, Config.SERVER_PORT))
     print("connected")
+    time.sleep(0.01)
     pub_key = sock.recv(Config.KEY_LENGTH).decode()
     sock.send(b'END')
     sock.close()
