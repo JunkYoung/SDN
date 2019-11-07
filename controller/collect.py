@@ -22,7 +22,7 @@ def recv_file(sock):
     while True:
         sock.listen(1)
         conn, addr = sock.accept()
-        enc_file = Config.BASE_PATH + "controller" + conn.getpeername()[0] + ".rules.enc2"
+        enc_file = Config.BASE_PATH + "controller" + conn.getpeername()[0] + ".rules.enc"
         with open(enc_file, 'wb') as f:
             while True:
                 data = conn.recv(512)
@@ -35,8 +35,8 @@ def recv_file(sock):
 
 def dec_files(priv_key):
     for ip in Config.HOST_IPS:
-        enc_file = Config.BASE_PATH + "controller" + ip + ".rules.enc2"
-        rules_file = enc_file[:-4]+str(2)
+        enc_file = Config.BASE_PATH + "controller" + ip + ".rules.enc"
+        rules_file = enc_file[:-4]
         with open(enc_file, 'rb') as enc_f, open(rules_file, 'w') as dec_f:
             while True:
                 encrypted = enc_f.read(Config.CHUNK_SIZE)
