@@ -8,9 +8,10 @@ from config import *
 
 
 COMMANDS = []
-COMMANDS.append('cd SDN/host/ && sudo python3 generate.py 200')
-COMMANDS.append('cd SDN/host/ && sudo python3 encrypt.py')
-#COMMANDS.append('sudo iptables -F')
+#COMMANDS.append('cd SDN/host/ && sudo python3 generate.py 200')
+#COMMANDS.append('cd SDN/host/ && sudo python3 encrypt.py')
+COMMANDS.append('sudo rm -r SDN')
+COMMANDS.append('git clone http://github.com/JunkYoung/SDN.git')
 
 
 def generate_key():

@@ -15,6 +15,7 @@ def send_file(enc_file):
     with open(enc_file, 'rb') as f:
         while True:
             data = f.read(512)
+            print(data)
             if data == b'':
                 sock.send(b'END')
                 break
