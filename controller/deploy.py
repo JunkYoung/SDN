@@ -14,7 +14,7 @@ def deploy_all():
     print("=====deploying rules=====")
     for i in range(1, 2000):
         for idx, switch in enumerate(Config.SWITCHS):
-            flow_name = 'sw' + str(idx) + '_flow' + str(i)
+            flow_name = 'sw' + str(idx+1) + '_flow' + str(i)
             flow_file = Config.BASE_PATH + flow_name + '.json'
             if os.path.isfile(flow_file):
                 URL = BASE_URL + '/flowprogrammer/default/node/OF/' + switch + '/staticFlow/' + flow_name

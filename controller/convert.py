@@ -55,7 +55,7 @@ def convert(rules_file, flow_id):
                         if 'DROP' == rule[idx+1]:
                             is_drop = True
 
-                    flow_name = 'sw' + str(sw_idx) + '_flow' + str(flow_id)
+                    flow_name = 'sw' + str(sw_idx+1) + '_flow' + str(flow_id)
                     new_flow = {}
                     new_flow['name'] = flow_name
                     new_flow['installInHw'] = 'true'

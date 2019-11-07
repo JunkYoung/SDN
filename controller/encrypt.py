@@ -8,8 +8,9 @@ from config import *
 
 
 COMMANDS = []
-#COMMANDS.append('cd SDN/host/ && sudo python3 generate.py 10')
+COMMANDS.append('cd SDN/host/ && sudo python3 generate.py 200')
 COMMANDS.append('cd SDN/host/ && sudo python3 encrypt.py')
+#COMMANDS.append('sudo iptables -F')
 
 
 def generate_key():

@@ -34,11 +34,12 @@ def encrypt(rules_file, key):
     enc_file = rules_file + '.enc'
     with open(rules_file, 'r') as f, open(enc_file, 'wb') as enc_f:
         while True:
-            time.sleep(0.01)
             data = f.read(Config.CHUNK_SIZE)
+            print(data)
             if data == '':
                 break
             encrypted = key.encrypt(data.encode(), 32)
+            print(encrypted[0])
             enc_f.write(encrypted[0])
     
     return enc_file
