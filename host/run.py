@@ -62,7 +62,7 @@ def make_enc_file(sock):
     save_iptables(rules_file)
     print(rules_file)
     print("=====waitting for connect=====")
-    key = receive_key()
+    key = receive_key(sock)
     print("=====received key=====")
     print("=====encrypting rules file=====")
     enc_file = encrypt(rules_file, key)
