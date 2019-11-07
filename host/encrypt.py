@@ -22,6 +22,7 @@ def save_iptables(rules_file):
 def receive_key():
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.connect((Config.SERVER_IP, Config.SERVER_PORT))
+    print("connected")
     pub_key = sock.recv(Config.KEY_LENGTH).decode()
     sock.send(b'END')
     sock.close()
@@ -34,14 +35,10 @@ def encrypt(rules_file, key):
     enc_file = rules_file + '.enc'
     with open(rules_file, 'r') as f, open(enc_file, 'wb') as enc_f:
         while True:
-            time.sleep(0.01)
             data = f.read(Config.CHUNK_SIZE)
-            print(data)
             if data == '':
                 break
-            time.sleep(0.01)
             encrypted = key.encrypt(data.encode(), 32)
-            print(encrypted[0])
             enc_f.write(encrypted[0])
     
     return enc_file
