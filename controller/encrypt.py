@@ -10,9 +10,9 @@ from config import *
 
 COMMANDS = []
 #COMMANDS.append('cd SDN/host/ && sudo python3 generate.py 200')
-#COMMANDS.append('cd SDN/host/ && sudo python3 encrypt.py')
-COMMANDS.append('sudo rm -r SDN')
-COMMANDS.append('git clone http://github.com/JunkYoung/SDN.git')
+COMMANDS.append('cd SDN/host/ && sudo python3 run.py -enc')
+#COMMANDS.append('sudo rm -r SDN')
+#COMMANDS.append('git clone http://github.com/JunkYoung/SDN.git')
 
 
 def generate_key():
@@ -29,14 +29,13 @@ def generate_key():
 
 def get_sock():
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    #sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, True)
     sock.bind((Config.IP, Config.PORT))
 
     return sock
 
 
 #run hosts using ssh, and do function fun with thread using sock with that host
-def run_hosts(sock, commands, fun, host_ips):
+def run_hosts(sock, commands, fun, host_ips, ):
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     thread = threading.Thread(target=fun, args=(sock,))

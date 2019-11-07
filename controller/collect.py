@@ -9,11 +9,10 @@ from encrypt import *
 
 
 COMMANDS = []
-COMMANDS.append('cd SDN/host/ && sudo python3 send.py')
+COMMANDS.append('cd SDN/host/ && sudo python3 run.py -send')
 
 RETRY = []
-RETRY.append('cd SDN/host/ && sudo python3 encrypt.py')
-RETRY.append('cd SDN/host/ && sudo python3 send.py')
+RETRY.append('cd SDN/host/ && sudo python3 run.py -enc')
 
 
 def load_key():
@@ -60,9 +59,9 @@ def dec_files(priv_key, host_ips):
 
 
 def retry(sock, retry_hosts):
-    #run_hosts(sock, [RETRY[0]], send_key, retry_hosts)
+    run_hosts(sock, RETRY, send_key, retry_hosts)
     priv_key = load_key()
-    run_hosts(sock, [RETRY[1]], recv_file, retry_hosts)
+    run_hosts(sock, COMMANDS, recv_file, retry_hosts)
     retry_hosts = dec_files(priv_key, retry_hosts)
     if retry_hosts:
         retry(sock, retry_hosts)
