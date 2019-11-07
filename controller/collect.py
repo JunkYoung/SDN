@@ -8,7 +8,6 @@ from config import *
 from encrypt import *
 
 COMMANDS = []
-#commands.append('SDN/host/sudo python3 generator.py 10')
 COMMANDS.append('cd SDN/host/ && sudo python3 send.py')
 
 
@@ -56,7 +55,7 @@ def collect_all():
     print("=====loading key=====")
     priv_key = load_key()
     print("=====receiving data=====")
-    run_hosts(recv_file)
+    run_hosts(COMMANDS, recv_file)
     print("=====decrypting data=====")
     dec_files(priv_key)
     print("=====end program=====")

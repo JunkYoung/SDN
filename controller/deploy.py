@@ -12,16 +12,17 @@ PASSWORD = 'admin'
 
 def deploy_all():
     print("=====deploying rules=====")
-    for i in range(2000):
-        for switch, idx in Config.SWITCHS:
-            flow_name = 'sw' + idx + 'flow' + str(i)
-            if os.path.isfile(Config.BASE_PATH + flow_name + '.json'):
+    for i in range(1, 2000):
+        for idx, switch in enumerate(Config.SWITCHS):
+            flow_name = 'sw' + str(idx) + '_flow' + str(i)
+            flow_file = Config.BASE_PATH + flow_name + '.json'
+            if os.path.isfile(flow_file):
                 URL = BASE_URL + '/flowprogrammer/default/node/OF/' + switch + '/staticFlow/' + flow_name
                 headers = {'Content-Type': 'application/json'}
-                data = json.dumps(open(flow_file, 'r').read())
+                data = open(flow_file, 'r').read()
                 response = requests.put(URL, headers=headers, data=data, auth=(USERNAME, PASSWORD))
-        else:
-            break
+            else:
+                break
     print("=====end program=====")
 
 

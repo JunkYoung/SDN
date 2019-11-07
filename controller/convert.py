@@ -15,9 +15,12 @@ def get_rules_files():
 def convert(rules_file, flow_id):
     with open(rules_file, 'r') as f:
         rules = f.readlines()
-        for switch, idx in Config.SWITCHS:
-            for rule in rules:
+        for rule in rules:
+            rule = rule.split()
+            is_flow = False
+            for sw_idx, switch in enumerate(Config.SWITCHS):
                 if '-A' in rule:
+                    is_flow = True
                     is_ip_source = False
                     is_ip_dest = False
                     is_port_source = False
@@ -25,7 +28,6 @@ def convert(rules_file, flow_id):
                     is_udp = False
                     is_tcp = False
                     is_drop = False
-                    rule = rule.split()
                     if '-s' in rule:
                         is_ip_source = True
                         idx = rule.index('-s')
@@ -53,39 +55,45 @@ def convert(rules_file, flow_id):
                         if 'DROP' == rule[idx+1]:
                             is_drop = True
 
-                flow_name = 'sw' + idx + '_flow' + str(flow_id)
-                new_flow = {}
-                new_flow['name'] = flow_name
-                new_flow['installInHw'] = 'true'
-                new_flow['node'] = {u'id': switch, u'type': u'OF'}
-                new_flow['etherType'] = 0x800
-                if (is_ip_source):
-                    pass
-                if (is_ip_dest):
-                    new_flow['nwDst'] = ip_dest
-                if (is_tcp):
-                    new_flow['protocol'] = 'tcp'
-                if (is_udp):
-                    new_flow['protocol'] = 'udp'
-                if (is_port_source):
-                    pass
-                if (is_port_dest):
-                    pass
-                new_flow['priority'] = 500
-                #node = {}
-                #node['id'] = switch
-                #node['type'] = 'OF'
-                #new_flow['node'] = node
-                if (is_drop):
-                    new_flow['actions'] = ['DROP']
-                with open(Config.BASE_PATH + flow_name + '.json', 'w') as f:
-                    f.write(json.dump(new_flow))
+                    flow_name = 'sw' + str(sw_idx) + '_flow' + str(flow_id)
+                    new_flow = {}
+                    new_flow['name'] = flow_name
+                    new_flow['installInHw'] = 'true'
+                    new_flow['node'] = {u'id': switch, u'type': u'OF'}
+                    new_flow['etherType'] = 0x800
+                    if (is_ip_source):
+                        new_flow['nwSrc'] = ip_source
+                    if (is_ip_dest):
+                        new_flow['nwDst'] = ip_dest
+                    if (is_tcp):
+                        new_flow['protocol'] = 0x6
+                    if (is_udp):
+                        new_flow['protocol'] = 0x11
+                    if (is_port_source):
+                        new_flow['tpSrc'] = port_source
+                    if (is_port_dest):
+                        new_flow['tpSrc'] = port_dest
+                    new_flow['priority'] = 500
+                    #node = {}
+                    #node['id'] = switch
+                    #node['type'] = 'OF'
+                    #new_flow['node'] = node
+                    if (is_drop):
+                        new_flow['actions'] = ['DROP']
+                    with open(Config.BASE_PATH + flow_name + '.json', 'w') as f:
+                        json_file = json.dumps(new_flow)
+                        f.write(json_file)
+            if is_flow:
+                flow_id += 1
+
+    return flow_id
 
 
 def convert_all():
     rules_files = get_rules_files()
+    flow_id = 1
     for rules_file in rules_files:
-        convert(rules_file)
+        flow_id = convert(rules_file, flow_id)
 
 
 if __name__=="__main__":

@@ -9,7 +9,7 @@ from config import *
 
 COMMANDS = []
 #COMMANDS.append('cd SDN/host/ && sudo python3 generate.py 10')
-COMMANDS.append('cd SDN/host/ && sudo python3 send.py')
+COMMANDS.append('cd SDN/host/ && sudo python3 encrypt.py')
 
 
 def generate_key():
@@ -25,7 +25,7 @@ def generate_key():
 
 
 #run hosts using ssh, and do function fun with thread using sock with that host
-def run_hosts(fun):
+def run_hosts(commands, fun):
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -36,7 +36,7 @@ def run_hosts(fun):
     for ip in Config.HOST_IPS:
         print(ip)
         ssh.connect(ip, username=Config.USERNAME, password=Config.PASSWORD)
-        for command in COMMANDS:
+        for command in commands:
             stdin, stdout, stderr = ssh.exec_command(command)
             lines = stdout.readlines()
             for line in lines:
@@ -64,7 +64,7 @@ def send_key(sock):
 
 
 def send_enc_msg():
-    run_hosts(send_key)
+    run_hosts(COMMANDS, send_key)
 
 
 if __name__ == '__main__':
