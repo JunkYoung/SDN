@@ -7,9 +7,24 @@ from config import *
 def get_ip_name():
     f = os.popen('ifconfig eth1 | grep "inet\ addr" | cut -d: -f2 | cut -d" " -f1')
     ip = f.read().strip()
-    rules_file = Config.BASE_PATH + 'host_' + ip + '.rules'
+    if ip == '172.26.17.124':
+        ip = '1'
+    elif ip == '172.26.17.125':
+        ip = '2'
+    elif ip == '172.26.17.126':
+        ip = '3'
+    elif ip == '172.26.17.127':
+        ip = '4'
+    elif ip == '172.26.17.128':
+        ip = '5'
+    elif ip == '172.26.17.130':
+        ip = '6'
+    elif ip == '172.26.17.131':
+        ip = '7'
 
-    return ip, rules_file
+    rules_file = Config.BASE_PATH + 'host_pi_' + ip + '.rules'
+
+    return rules_file
 
 
 def save_iptables(rules_file):
@@ -37,7 +52,7 @@ def encrypt(rules_file, key):
 
 
 def make_enc_file():
-    host_ip, rules_file = get_ip_name()
+    rules_file = get_ip_name()
     save_iptables(rules_file)
     key = load_key()
     enc_file = encrypt(rules_file, key)

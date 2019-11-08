@@ -6,8 +6,8 @@ from config import *
 
 def get_rules_files():
     rules_files = []
-    for ip in Config.HOST_IPS:
-        rules_file = Config.BASE_PATH + 'controller_' + ip + '.rules'
+    for idx, ip in enumerate(Config.HOST_IPS):
+        rules_file = Config.BASE_PATH + 'controller_pi_' + str(idx) + '.rules'
         rules_files.append(rules_file)
     
     return rules_files
