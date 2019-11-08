@@ -19,21 +19,42 @@ def load_key():
     return priv_key
 
 
+def ip_convert(ip):
+    if ip == '172.26.17.124':
+        ip = '1'
+    elif ip == '172.26.17.125':
+        ip = '2'
+    elif ip == '172.26.17.126':
+        ip = '3'
+    elif ip == '172.26.17.127':
+        ip = '4'
+    elif ip == '172.26.17.128':
+        ip = '5'
+    elif ip == '172.26.17.130':
+        ip = '6'
+    elif ip == '172.26.17.131':
+        ip = '7'
+
+    return ip
+
+
 def recv_file(host_ips):
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    for idx, ip in enumerate(host_ips):
+    for ip in host_ips:
         ssh.connect(ip, username=Config.HOST_USERNAME, password=Config.HOST_PASSWORD)
+        ip = ip_convert(ip)
         sftp = ssh.open_sftp()
-        sftp.get(Config.HOST_BASE_PATH + "host_pi_" + str(idx+1) + ".rules.enc", Config.BASE_PATH + "controller_pi_" + str(idx+1) + ".rules.enc")
+        sftp.get(Config.HOST_BASE_PATH + "host_pi_" + ip + ".rules.enc", Config.BASE_PATH + "controller_pi_" + ip + ".rules.enc")
         sftp.close()
         ssh.close()
 
 
 def dec_files(priv_key, host_ips):
     retry_hosts = []
-    for idx, ip in enumerate(host_ips):
-        enc_file = Config.BASE_PATH + "controller_pi_" + str(idx+1) + ".rules.enc"
+    for ip in host_ips:
+        ip = ip_convert(ip)
+        enc_file = Config.BASE_PATH + "controller_pi_" + ip + ".rules.enc"
         rules_file = enc_file[:-4]
         with open(enc_file, 'rb') as enc_f, open(rules_file, 'w') as dec_f:
             while True:

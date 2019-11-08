@@ -1,1 +1,0 @@
-{"tpSrc": "34821", "priority": "364", "protocol": 17, "etherType": 2048, "name": "sw1_flow1529", "installInHw": "true", "node": {"type": "OF", "id": "00:02:14:02:ec:58:94:40"}, "actions": ["DROP"], "nwDst": "127.91.144.234/32"}
