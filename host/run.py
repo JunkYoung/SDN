@@ -1,7 +1,6 @@
 import os
 import socket
 import time
-import sys
 from Crypto.PublicKey import RSA
 from Crypto import Random
 
@@ -21,6 +20,8 @@ def save_iptables(rules_file):
 
 
 def receive_key(sock):
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.connect((Config.SERVER_IP, Config.SERVER_PORT))
     print("connected")
     time.sleep(0.01)
     pub_key = sock.recv(Config.KEY_LENGTH).decode()
@@ -62,7 +63,7 @@ def make_enc_file(sock):
     save_iptables(rules_file)
     print(rules_file)
     print("=====waitting for connect=====")
-    key = receive_key(sock)
+    key = receive_key()
     print("=====received key=====")
     print("=====encrypting rules file=====")
     enc_file = encrypt(rules_file, key)
@@ -85,5 +86,4 @@ if __name__ == '__main__':
         make_enc_file(sock)
     if sys.argv[1] == '-send':
         send(sock)
-    sock.close()
     
