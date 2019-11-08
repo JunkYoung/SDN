@@ -22,6 +22,7 @@ def generate_key():
 def send_key(host_ips, commands):
     print("=====generating key=====")
     generate_key()
+    print("=====distributing key=====")
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     for ip in host_ips:
@@ -30,7 +31,6 @@ def send_key(host_ips, commands):
         sftp.put(Config.BASE_PATH + 'public.pem', Config.HOST_BASE_PATH + 'public.pem')
         sftp.close()
         for command in commands:
-            print(command)
             stdin, stdout, stderr = ssh.exec_command(command)
             lines = stdout.readlines()
             for line in lines:
@@ -39,6 +39,7 @@ def send_key(host_ips, commands):
             for line in lines:
                 print(line)
         ssh.close()
+    print("=====end program=====")
 
 
 if __name__ == '__main__':

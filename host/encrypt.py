@@ -39,7 +39,6 @@ def encrypt(rules_file, key):
 def make_enc_file():
     host_ip, rules_file = get_ip_name()
     save_iptables(rules_file)
-    print(rules_file)
     key = load_key()
     enc_file = encrypt(rules_file, key)
 

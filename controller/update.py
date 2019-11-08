@@ -15,7 +15,7 @@ def update_host(host_ips, commands):
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     for ip in host_ips:
         print(ip)
-        ssh.connect(ip, username=Config.USERNAME, password=Config.PASSWORD)
+        ssh.connect(ip, username=Config.HOST_USERNAME, password=Config.HOST_PASSWORD)
         for command in commands:
             print(command)
             stdin, stdout, stderr = ssh.exec_command(command)

@@ -1,0 +1,1 @@
+{"nwSrc": "175.60.71.196/32", "priority": "468", "protocol": 6, "etherType": 2048, "name": "sw1_flow46", "installInHw": "true", "node": {"type": "OF", "id": "00:02:14:02:ec:58:94:40"}, "actions": ["DROP"], "tpSrc": "24612"}

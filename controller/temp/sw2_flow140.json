@@ -1,0 +1,1 @@
+{"nwSrc": "53.82.238.246/32", "priority": "139", "protocol": 17, "etherType": 2048, "name": "sw2_flow140", "actions": ["DROP"], "installInHw": "true", "node": {"type": "OF", "id": "00:02:14:02:ec:58:28:40"}, "tpSrc": "35208", "nwDst": "112.6.89.85/32"}
