@@ -37,18 +37,11 @@ def encrypt(rules_file, key):
 
 
 def make_enc_file():
-    print("=====getting host info=====")
     host_ip, rules_file = get_ip_name()
-    print(host_ip)
-    print("=====saving iptables=====")
     save_iptables(rules_file)
     print(rules_file)
-    print("=====loading key=====")
     key = load_key()
-    print("=====encrypting rules file=====")
     enc_file = encrypt(rules_file, key)
-    print(enc_file)
-    print("=====end program=====")
 
 
 if __name__ == '__main__':

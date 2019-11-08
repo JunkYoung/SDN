@@ -8,11 +8,8 @@ from config import *
 from encrypt import *
 
 
-COMMANDS = []
-COMMANDS.append('cd SDN/host/ && sudo python3 run.py -send')
-
 RETRY = []
-RETRY.append('cd SDN/host/ && sudo python3 run.py -enc')
+RETRY.append('cd SDN/host/ && sudo python3 encrypt.py')
 
 
 def load_key():
@@ -22,25 +19,21 @@ def load_key():
     return priv_key
 
 
-def recv_file(sock):
-    while True:
-        sock.listen(1)
-        conn, addr = sock.accept()
-        enc_file = Config.BASE_PATH + "controller" + conn.getpeername()[0] + ".rules.enc"
-        with open(enc_file, 'wb') as f:
-            while True:
-                data = conn.recv(512)
-                if data == b'END':
-                    break
-                else:
-                    f.write(data)
-        conn.close()
+def recv_file(host_ips):
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    for ip in host_ips:
+        ssh.connect(ip, username=Config.HOST_USERNAME, password=Config.HOST_PASSWORD)
+        sftp = ssh.open_sftp()
+        sftp.get(Config.HOST_BASE_PATH + "host_" + ip + ".rules.enc", Config.BASE_PATH + "controller_" + ip + ".rules.enc")
+        sftp.close()
+        ssh.close()
 
 
 def dec_files(priv_key, host_ips):
     retry_hosts = []
-    for ip in Config.HOST_IPS:
-        enc_file = Config.BASE_PATH + "controller" + ip + ".rules.enc"
+    for ip in host_ips:
+        enc_file = Config.BASE_PATH + "controller_" + ip + ".rules.enc"
         rules_file = enc_file[:-4]
         with open(enc_file, 'rb') as enc_f, open(rules_file, 'w') as dec_f:
             while True:
@@ -58,27 +51,25 @@ def dec_files(priv_key, host_ips):
     return retry_hosts
 
 
-def retry(sock, retry_hosts):
-    run_hosts(sock, RETRY, send_key, retry_hosts)
+def retry(retry_hosts):
+    send_key(retry_hosts, RETRY)
     priv_key = load_key()
-    run_hosts(sock, COMMANDS, recv_file, retry_hosts)
+    recv_file(retry_hosts)
     retry_hosts = dec_files(priv_key, retry_hosts)
     if retry_hosts:
-        retry(sock, retry_hosts)
+        retry(retry_hosts)
 
 
 def collect_all():
-    sock = get_sock()
     print("=====loading key=====")
     priv_key = load_key()
     print("=====receiving data=====")
-    run_hosts(sock, COMMANDS, recv_file, Config.HOST_IPS)
+    recv_file(Config.HOST_IPS)
     print("=====decrypting data=====")
     retry_hosts = dec_files(priv_key, Config.HOST_IPS)
     if retry_hosts:
-        retry(sock, retry_hosts)
+        retry(retry_hosts)
     print("=====end program=====")
-    sock.close()
 
 
 if __name__ == '__main__':

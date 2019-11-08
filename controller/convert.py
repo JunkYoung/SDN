@@ -1,3 +1,4 @@
+import random
 import json
 
 from config import *
@@ -6,7 +7,7 @@ from config import *
 def get_rules_files():
     rules_files = []
     for ip in Config.HOST_IPS:
-        rules_file = Config.BASE_PATH + 'controller' + ip + '.rules'
+        rules_file = Config.BASE_PATH + 'controller_' + ip + '.rules'
         rules_files.append(rules_file)
     
     return rules_files
@@ -73,11 +74,7 @@ def convert(rules_file, flow_id):
                         new_flow['tpSrc'] = port_source
                     if (is_port_dest):
                         new_flow['tpSrc'] = port_dest
-                    new_flow['priority'] = 500
-                    #node = {}
-                    #node['id'] = switch
-                    #node['type'] = 'OF'
-                    #new_flow['node'] = node
+                    new_flow['priority'] = str(random.randint(1, 500))
                     if (is_drop):
                         new_flow['actions'] = ['DROP']
                     with open(Config.BASE_PATH + flow_name + '.json', 'w') as f:

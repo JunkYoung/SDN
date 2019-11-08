@@ -429,60 +429,60 @@ if __name__ == "__main__":
         timer = threading.Timer(5.0, execute_func, args=[tmp])
         timer.start()
 
-    agg = aggregate_traffic()
-    execute_func(agg)
+    # agg = aggregate_traffic()
+    # execute_func(agg)
     
-    # print '-----REST API LIBRARY MENU-----'
-    # print '1. Get all switches'
-    # print '2. Get all hosts'
-    # print '3. Get all flows'
-    # print '4. Get all flow stats'
-    # print '5. Get all Edges in the topology'
-    # print '6. Get all Containers'
-    # print '7. Get all node stats'
-    # print '8. Get node stats in a node'
-    # print '9. Get port stats'
-    # print '10. Get hosts attached to a node'
-    # print '11. Get all flows in a node'
-    # print '12. Delete all flows in a node'
-    # print '13. Delete all flows'
-    # print '14. Delete specific flow in a node'
-    # print '15. Test flow addition'
+    print '-----REST API LIBRARY MENU-----'
+    print '1. Get all switches'
+    print '2. Get all hosts'
+    print '3. Get all flows'
+    print '4. Get all flow stats'
+    print '5. Get all Edges in the topology'
+    print '6. Get all Containers'
+    print '7. Get all node stats'
+    print '8. Get node stats in a node'
+    print '9. Get port stats'
+    print '10. Get hosts attached to a node'
+    print '11. Get all flows in a node'
+    print '12. Delete all flows in a node'
+    print '13. Delete all flows'
+    print '14. Delete specific flow in a node'
+    print '15. Test flow addition'
     
-    # option = raw_input('Enter option needed:')
+    option = raw_input('Enter option needed:')
 
-    # if (option == '1'):
-    #     print_all_nodes()
-    # elif (option == '2'):
-    #     print_all_hosts()
-    # elif (option == '3'):
-    #     print_all_flows()
-    # elif (option == '4'):
-    #     print_all_flow_stats()    
-    # elif (option == '5'):
-    #     print_all_edges()
-    # elif (option == '6'):
-    #     print_all_containers()
-    # elif (option == '7'):
-    #     print_all_node_stats()
-    # elif (option == '8'):
-    #     print_node_stats()
-    # elif (option == '9'):
-    #     print_node_port_stats()
-    # elif (option == '10'):
-    #     print_all_hosts_node()
-    # elif (option == '11'):
-    #     print_all_flows_node()
-    # elif (option == '12'):
-    #     delete_flows_node()
-    # elif (option == '13'):
-    #     delete_all_flows()
-    # elif (option == '14'):
-    #     delete_spec_flow_node()
-    # elif (option == '15'):
-    #     test_flow_add()
-    # else:
-    #     print 'Invalid option'
+    if (option == '1'):
+        print_all_nodes()
+    elif (option == '2'):
+        print_all_hosts()
+    elif (option == '3'):
+        print_all_flows()
+    elif (option == '4'):
+        print_all_flow_stats()    
+    elif (option == '5'):
+        print_all_edges()
+    elif (option == '6'):
+        print_all_containers()
+    elif (option == '7'):
+        print_all_node_stats()
+    elif (option == '8'):
+        print_node_stats()
+    elif (option == '9'):
+        print_node_port_stats()
+    elif (option == '10'):
+        print_all_hosts_node()
+    elif (option == '11'):
+        print_all_flows_node()
+    elif (option == '12'):
+        delete_flows_node()
+    elif (option == '13'):
+        delete_all_flows()
+    elif (option == '14'):
+        delete_spec_flow_node()
+    elif (option == '15'):
+        test_flow_add()
+    else:
+        print 'Invalid option'
 
-#agg = aggregate_traffic()
+agg = aggregate_traffic()
 

@@ -1,7 +1,4 @@
-import socket
 import paramiko
-import threading
-import time
 from Crypto.PublicKey import RSA
 from Crypto import Random
 
@@ -9,10 +6,7 @@ from config import *
 
 
 COMMANDS = []
-#COMMANDS.append('cd SDN/host/ && sudo python3 generate.py 200')
-#COMMANDS.append('cd SDN/host/ && sudo python3 run.py -enc')
-COMMANDS.append('sudo rm -r SDN')
-COMMANDS.append('git clone http://github.com/JunkYoung/SDN.git')
+COMMANDS.append('cd SDN/host/ && sudo python3 encrypt.py')
 
 
 def generate_key():
@@ -24,28 +18,16 @@ def generate_key():
     with open (Config.BASE_PATH + 'public.pem', 'wb') as f:
         f.write(pub_key)
 
-    return pub_key
 
-
-def get_sock():
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.bind((Config.IP, Config.PORT))
-
-    return sock
-
-
-#run hosts using ssh, and do function fun with thread using sock with that host
-def run_hosts(sock, commands, fun, host_ips):
+def send_key(host_ips, commands):
+    print("=====generating key=====")
+    generate_key()
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    thread = threading.Thread(target=fun, args=(sock,))
-    thread.daemon = True
-    thread.start()
     for ip in host_ips:
-        print(ip)
-        ssh.connect(ip, username=Config.USERNAME, password=Config.PASSWORD)
+        ssh.connect(ip, username=Config.HOST_USERNAME, password=Config.HOST_PASSWORD)
         sftp = ssh.open_sftp()
-        sftp.put('temp/public', '/SDN/host/temp/public.pem')
+        sftp.put(Config.BASE_PATH + 'public.pem', Config.HOST_BASE_PATH + 'public.pem')
         sftp.close()
         for command in commands:
             print(command)
@@ -59,26 +41,5 @@ def run_hosts(sock, commands, fun, host_ips):
         ssh.close()
 
 
-def send_key(sock):
-    print("=====generating key=====")
-    pub_key = generate_key()
-    print("=====waitting connection=====")
-    while True:
-        sock.listen(1)
-        conn, addr = sock.accept()
-        conn.send(pub_key)
-        while True:
-            data = conn.recv(512)
-            if (data == b'END'):
-                break
-        conn.close()
-
-
-def send_enc_msg():
-    sock = get_sock()
-    run_hosts(sock, COMMANDS, send_key, Config.HOST_IPS)
-    sock.close()
-
-
 if __name__ == '__main__':
-    send_enc_msg()
+    send_key(Config.HOST_IPS, COMMANDS)
